@@ -1,1 +1,48 @@
+pip install Diagrams
 
+from diagrams import Diagram, Cluster
+
+from diagrams.custom import Custom
+
+with Diagram("Enhanced Data Pipeline - Architectural Diagram", show=False) as data_pipeline:
+    with Cluster("URL Data Source"):
+        url_data = Custom("URLClass", "/content/Class1.png")  # Assuming custom icon for URLClass
+
+    with Cluster("PDF Data Sources (Extraction)"):
+        PDF1 = Custom("PDF1","/content/pdf.png")
+        PDF2 = Custom("PDF2","/content/pdf.png")
+        PDF3 = Custom("PDF3","/content/pdf.png")
+
+    with Cluster("PDF Transformation"):
+        grobid = Custom("Grobid", "/content/Grobid_text.png")
+     
+
+    with Cluster("PDF Classes"):
+        metadata_pdf = Custom("MetaDataPDFClass", "/content/Class1.png")  # Assuming custom icon
+        content_pdf = Custom("ContentPDFClass", "/content/Class1.png")  # Assuming custom icon
+
+    with Cluster("Data Processing"):
+        csv_processing = ELB("CSV Processing")
+
+    with Cluster("S3 Buckets"):
+        s3_buckets = Custom("s3_buckets","/content/Aws.png")
+    
+    with Cluster("Transformation Tool"):
+        dbt = Custom("DBT","/content/dbt_icon.png")
+    
+    with Cluster("Database"):
+        snowflake_db = Custom("Snowflake (SQL Alchemy)", "/content/snowflake.png")
+
+
+    # Connections
+    url_data >> csv_processing
+    PDF1 >> grobid
+    PDF2 >> grobid
+    PDF3 >> grobid
+    grobid >> [metadata_pdf, content_pdf]
+    [metadata_pdf, content_pdf] >> csv_processing
+    csv_processing >> s3_buckets
+    s3_buckets >> dbt
+    dbt >> snowflake_db
+
+data_pipeline

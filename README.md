@@ -1,6 +1,5 @@
 # Assignment3
 
-
 Group Memebers:
 - Osborne Lopes
 - Akshitha Pathania
